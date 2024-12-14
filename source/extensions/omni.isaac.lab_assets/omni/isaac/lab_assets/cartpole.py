@@ -11,6 +11,8 @@ from omni.isaac.lab.actuators import ImplicitActuatorCfg
 from omni.isaac.lab.assets import ArticulationCfg
 from omni.isaac.lab.utils.assets import ISAACLAB_NUCLEUS_DIR
 
+import math
+
 ##
 # Configuration
 ##
@@ -34,7 +36,7 @@ CARTPOLE_CFG = ArticulationCfg(
         ),
     ),
     init_state=ArticulationCfg.InitialStateCfg(
-        pos=(0.0, 0.0, 2.0), joint_pos={"slider_to_cart": 0.0, "cart_to_pole": 0.0}
+        pos=(0.0, 0.0, 2.0), joint_pos={"slider_to_cart": -math.pi, "cart_to_pole": 0.0}
     ),
     actuators={
         "cart_actuator": ImplicitActuatorCfg(

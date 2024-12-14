@@ -1,3 +1,4 @@
+# type: ignore
 # Copyright (c) 2022-2024, The Isaac Lab Project Developers.
 # All rights reserved.
 #
@@ -175,12 +176,16 @@ class EventCfg:
     )
 
 
+FORWARD = (1000.0, 0.0, 0.0)
+UP = (0.0, 1000.0, 0.0)
+
 @configclass
 class RewardsCfg:
     """Reward terms for the MDP."""
 
     # (1) Reward for moving forward
-    progress = RewTerm(func=mdp.progress_reward, weight=1.0, params={"target_pos": (1000.0, 0.0, 0.0)})
+    # progress = RewTerm(func=mdp.progress_reward, weight=1.0, params={"target_pos": FORWARD})
+    progress = RewTerm(func=mdp.progress_reward, weight=1.0, params={"target_pos": UP})
     # (2) Stay alive bonus
     alive = RewTerm(func=mdp.is_alive, weight=2.0)
     # (3) Reward for non-upright posture
@@ -237,7 +242,9 @@ class TerminationsCfg:
     # (1) Terminate if the episode length is exceeded
     time_out = DoneTerm(func=mdp.time_out, time_out=True)
     # (2) Terminate if the robot falls
-    torso_height = DoneTerm(func=mdp.root_height_below_minimum, params={"minimum_height": 0.8})
+    torso_height_min = DoneTerm(func=mdp.root_height_below_minimum, params={"minimum_height": 0.8})
+    # # (3) Terminate if the robot jumps too high
+    # torso_height_max = DoneTerm(func=mdp.root_height_above_maximum, params={"maximum_height": 1.35})
 
 
 @configclass
@@ -257,8 +264,8 @@ class HumanoidEnvCfg(ManagerBasedRLEnvCfg):
     def __post_init__(self):
         """Post initialization."""
         # general settings
-        self.decimation = 2
-        self.episode_length_s = 16.0
+        self.decimation = 1
+        self.episode_length_s = 24.0
         # simulation settings
         self.sim.dt = 1 / 120.0
         self.sim.render_interval = self.decimation
