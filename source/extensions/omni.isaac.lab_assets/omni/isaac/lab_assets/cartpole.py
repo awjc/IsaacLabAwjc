@@ -35,6 +35,10 @@ CARTPOLE_CFG = ArticulationCfg(
             stabilization_threshold=0.001,
         ),
     ),
+    # For a weird unknown reason, the cart needs a starting position here of -pi
+    # in order for it to start centered on the track, which should be at position 0.0.
+    # If you try to start at 0.0 here and have a termination condition at 3.0, it will
+    # fail in a loop right when it starts and never be able to do anything.
     init_state=ArticulationCfg.InitialStateCfg(
         pos=(0.0, 0.0, 2.0), joint_pos={"slider_to_cart": -math.pi, "cart_to_pole": 0.0}
     ),
